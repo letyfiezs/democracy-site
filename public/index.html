@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ардчилсан Нам</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="tb">
+  <div class="w">
+    <span>📧 info@democraticparty.mn &nbsp;|&nbsp; ☎ 1800-1206</span>
+    <div><span class="lang on">MN</span><span class="lang">EN</span></div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header>
+  <div class="hdr">
+    <div class="logo" onclick="go('home')">
+      <div class="lc">АН</div>
+      <div class="lt"><div class="t1">Ардчилсан Нам</div><div class="t2">DEMOCRATIC PARTY OF MONGOLIA</div></div>
+    </div>
+    <nav>
+      <ul>
+        <li class="act"><a href="#" onclick="go('home');return false">Эхлэл</a></li>
+        <li>
+          <a href="#" onclick="go('about');return false">Ардчилсан нам ▾</a>
+          <div class="sub">
+            <a href="#" onclick="go('about');return false">Намын тухай</a>
+            <a href="#" onclick="go('ideology');return false">Үзэл баримтлал</a>
+            <a href="#" onclick="go('rules');return false">Үндсэн дүрэм</a>
+            <a href="#" onclick="go('members');return false">Гишүүд</a>
+          </div>
+        </li>
+        <li><a href="#" onclick="go('news');return false">Мэдээ мэдээлэл</a></li>
+        <li>
+          <a href="#" onclick="go('branch');return false">Салбар ▾</a>
+          <div class="sub">
+            <a href="#" onclick="go('branch');return false">Нийслэл</a>
+            <a href="#" onclick="go('branch');return false">Орон нутаг</a>
+            <a href="#" onclick="go('branch');return false">Дэргэдэх байгууллага</a>
+          </div>
+        </li>
+        <li><a href="#" onclick="go('finance');return false">Санхүү</a></li>
+      </ul>
+    </nav>
+    <div class="sbox">
+      <input type="text" placeholder="Хайх...">
+      <button>🔍</button>
+    </div>
+  </div>
+</header>
+
+<!-- ════ HOME ════ -->
+<div id="pg-home" class="pg on">
+  <div class="hero">
+    <div class="hslides" id="hsl"></div>
+    <div style="position:relative;height:0">
+      <div class="harr-wrap" style="top:-90px;position:absolute">
+        <button class="harr" onclick="slide(-1)">‹</button>
+        <button class="harr" onclick="slide(1)">›</button>
+      </div>
+    </div>
+    <div class="hdots" id="hdots"></div>
+  </div>
+  <div class="ql-bar">
+    <div class="ql-inner">
+      <div class="ql" onclick="go('about')"><span>🏛️</span>Намын тухай</div>
+      <div class="ql" onclick="go('members')"><span>👥</span>Намын удирдлага</div>
+      <div class="ql" onclick="go('news')"><span>📰</span>Мэдээ мэдээлэл</div>
+      <div class="ql" onclick="go('finance')"><span>📊</span>Санхүүгийн тайлан</div>
+    </div>
+  </div>
+  <div class="sec">
+    <div class="si">
+      <div class="sh"><h2>Ардчилсан нам</h2><a href="#" onclick="go('about');return false">Бүгдийг үзэх →</a></div>
+      <div class="ag">
+        <div class="ac" onclick="go('about')"><div class="icon">🏛️</div><h3>Бидний тухай</h3></div>
+        <div class="ac" onclick="go('ideology')"><div class="icon">📜</div><h3>Үзэл баримтлал</h3></div>
+        <div class="ac" onclick="go('rules')"><div class="icon">⚖️</div><h3>Үндсэн дүрэм</h3></div>
+        <div class="ac" onclick="go('members')"><div class="icon">👥</div><h3>Гишүүд</h3></div>
+      </div>
+    </div>
+  </div>
+  <div class="sec seca">
+    <div class="si">
+      <div class="sh"><h2>Шинэ мэдээ</h2><a href="#" onclick="go('news');return false">Бүх мэдээ →</a></div>
+      <div class="nf" id="home-news-grid"><div class="empty-state">Ачааллаж байна...</div></div>
+    </div>
+  </div>
+  <div class="sbar">
+    <div class="sbar-i">
+      <div class="stat"><div class="n">1990</div><div class="l">Үүсгэн байгуулагдсан</div></div>
+      <div class="stat"><div class="n">50,000+</div><div class="l">Гишүүдийн тоо</div></div>
+      <div class="stat"><div class="n">21</div><div class="l">Аймгийн салбар</div></div>
+      <div class="stat"><div class="n">42</div><div class="l">УИХ-ын гишүүд</div></div>
+    </div>
+  </div>
+  <div class="sec">
+    <div class="si">
+      <div class="sh"><h2>Үйл явдал</h2><a href="#" onclick="go('news');return false">Бүгд →</a></div>
+      <div class="evl" id="home-events"><div class="empty-state">Ачааллаж байна...</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ ABOUT ════ -->
+<div id="pg-about" class="pg">
+  <div class="phero"><div class="phi"><h1>🏛️ Ардчилсан нам</h1><p>Монгол Улсын тэргүүлэх ардчилсан улс төрийн нам</p></div></div>
+  <div class="bc"><div class="bi"><a href="#" onclick="go('home')">Эхлэл</a> › <strong>Намын тухай</strong></div></div>
+  <div class="pw">
+    <aside class="sb"><div class="sbbox"><div class="sbt">Ардчилсан нам</div><ul class="sbl"><li class="on"><a href="#" onclick="go('about');return false">Намын тухай</a></li><li><a href="#" onclick="go('ideology');return false">Үзэл баримтлал</a></li><li><a href="#" onclick="go('rules');return false">Үндсэн дүрэм</a></li><li><a href="#" onclick="go('members');return false">Гишүүд</a></li></ul></div></aside>
+    <main>
+      <div class="card"><div class="cdh"><span style="font-size:22px">🏛️</span><h2>Намын тухай</h2></div><div class="cdb">
+        <p style="line-height:1.8;margin-bottom:16px">Ардчилсан нам нь Монгол Улсын тэргүүлэх ардчилсан улс төрийн нам бөгөөд 1990 оноос хойш иргэдийнхээ ашиг сонирхлын төлөө тэмцэж иржээ. Нам нь ардчилал, хүний эрх, зах зээлийн эдийн засаг, нийгмийн шударга ёсыг үндсэн зарчим болгон баримталдаг.</p>
+        <p style="line-height:1.8;margin-bottom:16px">1990 оны ардчилсан хувьсгалыг удирдаж, Монгол Улсыг ардчилсан тогтолцоонд шилжүүлэхэд гол үүрэг гүйцэтгэсэн Ардчилсан нам нь өнөөг хүртэл улс орны хөгжил дэвшилд идэвхтэй оролцсоор ирлээ.</p>
+        <p style="line-height:1.8">Нам нь улсын хэмжээнд 21 аймаг, нийслэлийн 9 дүүрэгт салбар байгууллагатай бөгөөд олон мянган идэвхтэй гишүүдтэй.</p>
+      </div></div>
+      <div class="ag">
+        <div class="ac" onclick="go('ideology')"><div class="icon">📜</div><h3>Үзэл баримтлал</h3></div>
+        <div class="ac" onclick="go('rules')"><div class="icon">⚖️</div><h3>Үндсэн дүрэм</h3></div>
+        <div class="ac" onclick="go('members')"><div class="icon">👥</div><h3>Гишүүд</h3></div>
+        <div class="ac" onclick="go('branch')"><div class="icon">🗺️</div><h3>Салбар</h3></div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- ════ IDEOLOGY ════ -->
+<div id="pg-ideology" class="pg">
+  <div class="phero"><div class="phi"><h1>📜 Үзэл баримтлал</h1><p>Ардчилсан намын үндсэн зарчим, үнэт зүйлс</p></div></div>
+  <div class="bc"><div class="bi"><a href="#" onclick="go('home')">Эхлэл</a> › <a href="#" onclick="go('about')">Ардчилсан нам</a> › <strong>Үзэл баримтлал</strong></div></div>
+  <div class="pw">
+    <aside class="sb"><div class="sbbox"><div class="sbt">Ардчилсан нам</div><ul class="sbl"><li><a href="#" onclick="go('about');return false">Намын тухай</a></li><li class="on"><a href="#" onclick="go('ideology');return false">Үзэл баримтлал</a></li><li><a href="#" onclick="go('rules');return false">Үндсэн дүрэм</a></li><li><a href="#" onclick="go('members');return false">Гишүүд</a></li></ul></div></aside>
+    <main>
+      <div class="card"><div class="cdh"><span style="font-size:22px">📜</span><h2>Үзэл баримтлал</h2></div><div class="cdb">
+        <div class="acc"><div class="ach open" onclick="tog(this)"><span>🕊️ Ардчилал ба эрх чөлөө</span><span class="arr">▼</span></div><div class="acb open"><ol><li>Ардчилсан нам нь иргэдийн эрх, эрх чөлөөг дээдэлж, улс төрийн олон ургальч үзлийг дэмждэг.</li><li>Чөлөөт сонгуулийг хамгаалж, ардчиллын тогтолцоог бэхжүүлэхэд тэргүүлэх байр суурь эзэлнэ.</li><li>Хэвлэл мэдээллийн эрх чөлөө, иргэдийн нийтлэг эрхийг хамгаалахад идэвхтэй оролцоно.</li></ol></div></div>
+        <div class="acc"><div class="ach" onclick="tog(this)"><span>📈 Зах зээлийн эдийн засаг</span><span class="arr">▼</span></div><div class="acb"><ol><li>Чөлөөт зах зээлийн эдийн засгийн зарчмыг баримтлан хувийн хэвшлийн хөгжлийг дэмжинэ.</li><li>Гадаадын хөрөнгө оруулалтыг татах таатай орчин бүрдүүлнэ.</li><li>Жижиг дунд үйлдвэрлэлийн хөгжлийг тэргүүлэх чиглэл болгоно.</li></ol></div></div>
+        <div class="acc"><div class="ach" onclick="tog(this)"><span>⚖️ Нийгмийн шударга ёс</span><span class="arr">▼</span></div><div class="acb"><ol><li>Нийгмийн тэгш байдал, ядуурлыг бууруулах бодлогыг хэрэгжүүлнэ.</li><li>Боловсрол, эрүүл мэндийн тэгш хүртээмжийг хангана.</li><li>Хүн бүрийн нийгмийн хамгааллыг баталгаажуулна.</li></ol></div></div>
+        <div class="acc"><div class="ach" onclick="tog(this)"><span>🌿 Байгаль орчин</span><span class="arr">▼</span></div><div class="acb"><ol><li>Тогтвортой хөгжлийн зарчмыг мөрдлөг болгон байгаль орчныг хамгаалах бодлого хэрэгжүүлнэ.</li><li>Ногоон эдийн засагт шилжих үйл ажиллагааг идэвхжүүлнэ.</li></ol></div></div>
+      </div></div>
+    </main>
+  </div>
+</div>
+
+<!-- ════ RULES ════ -->
+<div id="pg-rules" class="pg">
+  <div class="phero"><div class="phi"><h1>⚖️ Үндсэн дүрэм</h1><p>Ардчилсан намын үндсэн дүрэм, журам</p></div></div>
+  <div class="bc"><div class="bi"><a href="#" onclick="go('home')">Эхлэл</a> › <a href="#" onclick="go('about')">Ардчилсан нам</a> › <strong>Үндсэн дүрэм</strong></div></div>
+  <div class="pw">
+    <aside class="sb"><div class="sbbox"><div class="sbt">Ардчилсан нам</div><ul class="sbl"><li><a href="#" onclick="go('about');return false">Намын тухай</a></li><li><a href="#" onclick="go('ideology');return false">Үзэл баримтлал</a></li><li class="on"><a href="#" onclick="go('rules');return false">Үндсэн дүрэм</a></li><li><a href="#" onclick="go('members');return false">Гишүүд</a></li></ul></div></aside>
+    <main>
+      <div class="card"><div class="cdh"><span style="font-size:22px">⚖️</span><h2>Үндсэн дүрэм</h2></div><div class="cdb">
+        <p style="line-height:1.8;margin-bottom:16px">Ардчилсан намын Үндсэн дүрэм нь намын зохион байгуулалт, үйл ажиллагааны үндсэн журмыг тодорхойлдог.</p>
+        <p style="line-height:1.8;margin-bottom:20px">Үндсэн дүрмийг бүрэн эхээр нь Монголын сонгуулийн ерөнхий хорооны системд хадгалагдаж байгаа.</p>
+        <a href="https://m-election.mn" target="_blank" class="btn btn-g">📄 Дүрмийг үзэх</a>
+      </div></div>
+    </main>
+  </div>
+</div>
+
+<!-- ════ MEMBERS ════ -->
+<div id="pg-members" class="pg">
+  <div class="phero"><div class="phi"><h1>👥 Гишүүд</h1><p>Ардчилсан намын удирдлага, УИХ-ын гишүүд, НИТХ-ын төлөөлөгчид</p></div></div>
+  <div class="bc"><div class="bi"><a href="#" onclick="go('home')">Эхлэл</a> › <a href="#" onclick="go('about')">Ардчилсан нам</a> › <strong>Гишүүд</strong></div></div>
+  <div class="pw">
+    <aside class="sb"><div class="sbbox"><div class="sbt">Ардчилсан нам</div><ul class="sbl"><li><a href="#" onclick="go('about');return false">Намын тухай</a></li><li><a href="#" onclick="go('ideology');return false">Үзэл баримтлал</a></li><li><a href="#" onclick="go('rules');return false">Үндсэн дүрэм</a></li><li class="on"><a href="#" onclick="go('members');return false">Гишүүд</a></li></ul></div></aside>
+    <main>
+      <div class="mtabs">
+        <button class="mtab on" onclick="mTab('lead',this)">Намын удирдлага</button>
+        <button class="mtab" onclick="mTab('nbd',this)">НБД</button>
+        <button class="mtab" onclick="mTab('uih',this)">УИХ-ын гишүүд</button>
+        <button class="mtab" onclick="mTab('nitx',this)">НИТХ-ын төлөөлөгчид</button>
+      </div>
+      <div id="ml-lead" class="tpanel on"><div class="card"><div class="cdh"><h2>Намын удирдлага</h2></div><div class="cdb"><div class="mslider"><div class="empty-state">Ачааллаж байна...</div></div></div></div></div>
+      <div id="ml-nbd" class="tpanel"><div class="card"><div class="cdh"><h2>Нарийн бичгийн дарга нар</h2></div><div class="cdb"><div class="mslider"></div></div></div></div>
+      <div id="ml-uih" class="tpanel"><div class="card"><div class="cdh"><h2>УИХ дахь Ардчилсан намын гишүүд</h2></div><div class="cdb"><div class="mslider"></div></div></div></div>
+      <div id="ml-nitx" class="tpanel"><div class="card"><div class="cdh"><h2>НИТХ-ын Ардчилсан намын төлөөлөгчид</h2></div><div class="cdb"><div class="mslider"></div></div></div></div>
+    </main>
+  </div>
+</div>
+
+<!-- ════ NEWS ════ -->
+<div id="pg-news" class="pg">
+  <div class="phero"><div class="phi"><h1>📰 Мэдээ мэдээлэл</h1><p>Ардчилсан намын сүүлийн мэдээ, мэдэгдэл, үйл явдал</p></div></div>
+  <div class="bc"><div class="bi"><a href="#" onclick="go('home')">Эхлэл</a> › <strong>Мэдээ мэдээлэл</strong></div></div>
+  <div style="max-width:1200px;margin:32px auto;padding:0 20px">
+    <div class="tabs">
+      <button class="tbtn on" onclick="ntab('all',this)">Бүх мэдээ</button>
+      <button class="tbtn" onclick="ntab('ev',this)">Үйл явдал</button>
+      <button class="tbtn" onclick="ntab('pr',this)">Мэдэгдэл</button>
+    </div>
+    <div id="nt-all" class="tpanel on"><div class="ng"><div class="empty-state">Ачааллаж байна...</div></div></div>
+    <div id="nt-ev" class="tpanel"><div class="evl"></div></div>
+    <div id="nt-pr" class="tpanel"><div class="ng"></div></div>
+  </div>
+</div>
+
+<!-- ════ MEMBER DETAIL ════ -->
+<div id="pg-memberdetail" class="pg">
+  <div class="phero"><div class="phi"><h1 id="md-name">👤 Гишүүн</h1><p id="md-role"></p></div></div>
+  <div class="bc"><div class="bi"><a href="#" onclick="go('home')">Эхлэл</a> › <a href="#" onclick="go('members')">Гишүүд</a> › <strong>Дэлгэрэнгүй</strong></div></div>
+  <div style="max-width:820px;margin:32px auto;padding:0 20px">
+    <div class="card"><div class="cdb">
+      <div class="md-layout">
+        <div class="md-photo" id="md-photo">👤</div>
+        <div class="md-info">
+          <h2 id="md-name2"></h2>
+          <div class="md-role-pill" id="md-role2"></div>
+          <div id="md-description" style="line-height:1.8;margin-top:16px;color:var(--txt)"></div>
+        </div>
+      </div>
+    </div></div>
+  </div>
+</div>
+
+<!-- ════ NEWS DETAIL ════ -->
+<div id="pg-newsdetail" class="pg">
+  <div class="phero"><div class="phi"><h1 id="nd-title">📰 Мэдээ</h1><p id="nd-date"></p></div></div>
+  <div class="bc"><div class="bi"><a href="#" onclick="go('home')">Эхлэл</a> › <a href="#" onclick="go('news')">Мэдээ мэдээлэл</a> › <strong>Дэлгэрэнгүй</strong></div></div>
+  <div style="max-width:900px;margin:32px auto;padding:0 20px">
+    <div class="card"><div class="cdb" id="nd-body" style="line-height:1.8"></div></div>
+  </div>
+</div>
+
+<!-- ════ BRANCH ════ -->
+<div id="pg-branch" class="pg">
+  <div class="phero"><div class="phi"><h1>🗺️ Салбар байгууллага</h1><p>Нийслэл болон орон нутгийн салбар байгууллагууд</p></div></div>
+  <div class="bc"><div class="bi"><a href="#" onclick="go('home')">Эхлэл</a> › <strong>Салбар</strong></div></div>
+  <div style="max-width:1200px;margin:32px auto;padding:0 20px">
+    <div class="tabs">
+      <button class="tbtn on" onclick="btab('cap',this)">Нийслэл</button>
+      <button class="tbtn" onclick="btab('pro',this)">Орон нутаг</button>
+      <button class="tbtn" onclick="btab('org',this)">Дэргэдэх байгууллага</button>
+    </div>
+    <div id="bt-cap" class="tpanel on"><div class="ng">
+      <div class="nc"><div class="nth" style="height:100px;font-size:36px">🏙️</div><div class="nb"><div class="ntitle" style="margin-top:8px">Нийслэл</div></div></div>
+      <div class="nc"><div class="nth" style="height:100px;font-size:36px">🏘️</div><div class="nb"><div class="ntitle" style="margin-top:8px">Баянгол дүүрэг</div></div></div>
+      <div class="nc"><div class="nth" style="height:100px;font-size:36px">🏘️</div><div class="nb"><div class="ntitle" style="margin-top:8px">Баянзүрх дүүрэг</div></div></div>
+      <div class="nc"><div class="nth" style="height:100px;font-size:36px">🏘️</div><div class="nb"><div class="ntitle" style="margin-top:8px">Сонгинохайрхан дүүрэг</div></div></div>
+      <div class="nc"><div class="nth" style="height:100px;font-size:36px">🏘️</div><div class="nb"><div class="ntitle" style="margin-top:8px">Хан-Уул дүүрэг</div></div></div>
+      <div class="nc"><div class="nth" style="height:100px;font-size:36px">🏘️</div><div class="nb"><div class="ntitle" style="margin-top:8px">Чингэлтэй дүүрэг</div></div></div>
+    </div></div>
+    <div id="bt-pro" class="tpanel"><div class="ng">
+      <div class="nc"><div class="nth" style="height:100px;font-size:36px">🏔️</div><div class="nb"><div class="ntitle" style="margin-top:8px">Архангай аймаг</div></div></div>
+      <div class="nc"><div class="nth" style="height:100px;font-size:36px">🏔️</div><div class="nb"><div class="ntitle" style="margin-top:8px">Баян-Өлгий аймаг</div></div></div>
+      <div class="nc"><div class="nth" style="height:100px;font-size:36px">🏔️</div><div class="nb"><div class="ntitle" style="margin-top:8px">Баянхонгор аймаг</div></div></div>
+      <div class="nc"><div class="nth" style="height:100px;font-size:36px">🏔️</div><div class="nb"><div class="ntitle" style="margin-top:8px">Говь-Алтай аймаг</div></div></div>
+      <div class="nc"><div class="nth" style="height:100px;font-size:36px">🏔️</div><div class="nb"><div class="ntitle" style="margin-top:8px">Хөвсгөл аймаг</div></div></div>
+      <div class="nc"><div class="nth" style="height:100px;font-size:36px">🏔️</div><div class="nb"><div class="ntitle" style="margin-top:8px">Хэнтий аймаг</div></div></div>
+    </div></div>
+    <div id="bt-org" class="tpanel"><div class="card"><div class="cdh"><h2>Дэргэдэх байгууллагууд</h2></div><div class="cdb">
+      <ul style="list-style:none;display:flex;flex-direction:column;gap:12px">
+        <li style="padding:14px;border:1px solid var(--gl);border-radius:6px;display:flex;align-items:center;gap:12px"><span style="font-size:24px">🎓</span><div><strong>Зориг ардчиллын хүрээлэн</strong><div style="font-size:12px;color:var(--gray);margin-top:3px">Судалгаа, сургалт, хөгжлийн байгууллага</div></div></li>
+        <li style="padding:14px;border:1px solid var(--gl);border-radius:6px;display:flex;align-items:center;gap:12px"><span style="font-size:24px">👩</span><div><strong>Ардчилсан намын эмэгтэйчүүдийн холбоо</strong><div style="font-size:12px;color:var(--gray);margin-top:3px">Эмэгтэйчүүдийн эрхийг хамгаалах байгууллага</div></div></li>
+        <li style="padding:14px;border:1px solid var(--gl);border-radius:6px;display:flex;align-items:center;gap:12px"><span style="font-size:24px">🏃</span><div><strong>Залуучуудын хороо</strong><div style="font-size:12px;color:var(--gray);margin-top:3px">Залуу үеийн хөгжлийг дэмжих байгууллага</div></div></li>
+      </ul>
+    </div></div></div>
+  </div>
+</div>
+
+<!-- ════ FINANCE ════ -->
+<div id="pg-finance" class="pg">
+  <div class="phero"><div class="phi"><h1>📊 Санхүүгийн тайлан</h1><p>Ардчилсан намын санхүүгийн ил тод мэдээлэл</p></div></div>
+  <div class="bc"><div class="bi"><a href="#" onclick="go('home')">Эхлэл</a> › <strong>Санхүү</strong></div></div>
+  <div style="max-width:1200px;margin:32px auto;padding:0 20px">
+    <div class="fcards">
+      <div class="fcard"><div class="fn">₮ 2.4 тэрбум</div><div class="fl">2024 оны нийт орлого</div></div>
+      <div class="fcard"><div class="fn">₮ 1.9 тэрбум</div><div class="fl">2024 оны нийт зарлага</div></div>
+      <div class="fcard"><div class="fn">₮ 0.5 тэрбум</div><div class="fl">Үлдэгдэл</div></div>
+    </div>
+    <div class="card"><div class="cdh"><span style="font-size:22px">📊</span><h2>Санхүүгийн тайлан</h2></div><div class="cdb">
+      <table class="tbl">
+        <thead><tr><th>Он</th><th>Орлого</th><th>Зарлага</th><th>Тайлан</th></tr></thead>
+        <tbody>
+          <tr><td>2024</td><td>₮ 2,400,000,000</td><td>₮ 1,900,000,000</td><td><a href="#" style="color:var(--blue);font-weight:600">📄 Татах</a></td></tr>
+          <tr><td>2023</td><td>₮ 2,100,000,000</td><td>₮ 1,850,000,000</td><td><a href="#" style="color:var(--blue);font-weight:600">📄 Татах</a></td></tr>
+          <tr><td>2022</td><td>₮ 1,900,000,000</td><td>₮ 1,700,000,000</td><td><a href="#" style="color:var(--blue);font-weight:600">📄 Татах</a></td></tr>
+        </tbody>
+      </table>
+    </div></div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="ft">
+    <div class="fbl">
+      <div class="flogo"><div class="fc">АН</div><div class="fn">Ардчилсан Нам</div></div>
+      <p>Ардчилсан нам нь Монгол Улсын тэргүүлэх ардчилсан улс төрийн нам бөгөөд 1990 оноос хойш иргэдийнхээ ашиг сонирхлын төлөө тэмцэж иржээ.</p>
+      <div class="fct"><div>📍 УБ, Сүхбаатар дүүрэг, 1-р хороо, ЧӨЧ-1</div><div>📧 info@democraticparty.mn</div><div>☎ 1800-1206</div></div>
+    </div>
+    <div class="fcol"><h4>Ардчилсан нам</h4><ul>
+      <li><a href="#" onclick="go('about');return false">Намын тухай</a></li>
+      <li><a href="#" onclick="go('ideology');return false">Үзэл баримтлал</a></li>
+      <li><a href="#" onclick="go('rules');return false">Үндсэн дүрэм</a></li>
+      <li><a href="#" onclick="go('members');return false">Гишүүд</a></li>
+    </ul></div>
+    <div class="fcol"><h4>Мэдээлэл</h4><ul>
+      <li><a href="#" onclick="go('news');return false">Мэдээ</a></li>
+      <li><a href="#" onclick="go('branch');return false">Салбар</a></li>
+      <li><a href="#" onclick="go('finance');return false">Санхүү</a></li>
+    </ul></div>
+    <div class="fcol"><h4>Холбоосууд</h4><ul>
+      <li><a href="#" onclick="go('members');return false">УИХ Гишүүд</a></li>
+      <li><a href="#" onclick="go('members');return false">НИТХ Төлөөлөгчид</a></li>
+      <li><a href="#" onclick="go('branch');return false">Орон нутаг</a></li>
+      <li><a href="/admin/">Админ нэвтрэх</a></li>
+    </ul></div>
+  </div>
+  <div class="fb">© Ардчилсан нам. 2011–2026. Зохиогчийн эрх хуулиар хамгаалагдсан. Мэдээлэл хуулбарлах хориотой.</div>
+</footer>
+
+<script src="/js/main.js"></script>
+</body>
+</html>

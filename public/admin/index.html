@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Админ панель — Ардчилсан Нам</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/admin/admin.css">
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-wrap" id="login-wrap">
+  <div class="login-box">
+    <div class="lc">АН</div>
+    <h1>Админ нэвтрэх</h1>
+    <div class="sub">Ардчилсан Нам — Удирдлагын самбар</div>
+    <div class="error-msg" id="login-error"></div>
+    <form id="login-form">
+      <div class="field"><label>Нэвтрэх нэр</label><input type="text" id="login-username" autocomplete="username" required></div>
+      <div class="field"><label>Нууц үг</label><input type="password" id="login-password" autocomplete="current-password" required></div>
+      <button type="submit" class="btn btn-primary">Нэвтрэх</button>
+    </form>
+  </div>
+</div>
+
+<!-- APP -->
+<div class="app" id="app">
+  <aside class="sidebar">
+    <div class="brand"><div class="lc">АН</div><div class="tn">Ардчилсан Нам<small>ADMIN PANEL</small></div></div>
+    <ul class="snav">
+      <li class="on"><a onclick="showPanel('hero',this)">🖼️ Header зурагнууд</a></li>
+      <li><a onclick="showPanel('news',this)">📰 Мэдээ мэдээлэл</a></li>
+      <li><a onclick="showPanel('members',this)">👥 Гишүүд</a></li>
+      <li><a onclick="showPanel('settings',this)">⚙️ Тохиргоо</a></li>
+      <li><a href="/" target="_blank">🌐 Сайт үзэх ↗</a></li>
+    </ul>
+    <div class="sfoot">
+      <div class="uname" id="cur-username">—</div>
+      <button class="btn btn-outline btn-sm" style="width:100%" onclick="logout()">Гарах</button>
+    </div>
+  </aside>
+
+  <main class="content">
+
+    <!-- HERO PANEL -->
+    <section class="cpanel on" id="panel-hero">
+      <div class="chead">
+        <div><h2>🖼️ Header (Hero) зурагнууд</h2><p>Нүүр хуудасны эргэлддэг зургуудыг энд удирдана</p></div>
+        <button class="btn btn-gold" onclick="openHeroForm()">+ Шинэ слайд</button>
+      </div>
+
+      <div class="panel-card hidden" id="hero-form-card">
+        <div class="pch"><span id="hero-form-title">Шинэ слайд нэмэх</span></div>
+        <div class="pcb">
+          <div class="error-msg" id="hero-error"></div>
+          <form id="hero-form">
+            <input type="hidden" id="hero-id">
+            <div class="field"><label>Шошго (tag)</label><input type="text" id="hero-tag" placeholder="Сүүлийн мэдээ"></div>
+            <div class="field"><label>Гарчиг *</label><input type="text" id="hero-title" required></div>
+            <div class="field"><label>Тайлбар</label><textarea id="hero-description"></textarea></div>
+            <div class="field">
+              <label>Зураг (header дээр харагдана)</label>
+              <div class="image-preview" id="hero-img-preview">Зураггүй</div>
+              <input type="file" id="hero-image" accept="image/*">
+              <label style="display:flex;align-items:center;gap:6px;margin-top:6px;font-weight:400"><input type="checkbox" id="hero-remove-image" style="width:auto"> Одоогийн зургийг устгах</label>
+            </div>
+            <div class="field"><label>Градиент (зураг ороогүй үед, заавал биш) — жишээ: linear-gradient(135deg,#001f5c,#1565c0)</label><input type="text" id="hero-gradient"></div>
+            <div class="field-row">
+              <div class="field"><label>Товч 1 текст</label><input type="text" id="hero-btn1-text" placeholder="Дэлгэрэнгүй"></div>
+              <div class="field"><label>Товч 1 хуудас</label>
+                <select id="hero-btn1-target"><option value="news">Мэдээ</option><option value="about">Намын тухай</option><option value="members">Гишүүд</option><option value="finance">Санхүү</option><option value="branch">Салбар</option></select>
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field"><label>Товч 2 текст</label><input type="text" id="hero-btn2-text" placeholder="Намын тухай"></div>
+              <div class="field"><label>Товч 2 хуудас</label>
+                <select id="hero-btn2-target"><option value="about">Намын тухай</option><option value="news">Мэдээ</option><option value="members">Гишүүд</option><option value="finance">Санхүү</option><option value="branch">Салбар</option></select>
+              </div>
+            </div>
+            <div class="field"><label>Эрэмбэ (тоо, жижиг нь түрүүлж харагдана)</label><input type="number" id="hero-sort" value="0"></div>
+            <div class="actions">
+              <button type="submit" class="btn btn-primary" style="width:auto">Хадгалах</button>
+              <button type="button" class="btn btn-outline" onclick="closeHeroForm()">Цуцлах</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="panel-card">
+        <div class="pch">Слайдын жагсаалт</div>
+        <div class="pcb" style="padding:0">
+          <table class="admin-tbl">
+            <thead><tr><th>Зураг</th><th>Гарчиг</th><th>Шошго</th><th>Эрэмбэ</th><th>Үйлдэл</th></tr></thead>
+            <tbody id="hero-tbody"><tr class="empty-row"><td colspan="5">Ачааллаж байна...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- NEWS PANEL -->
+    <section class="cpanel" id="panel-news">
+      <div class="chead">
+        <div><h2>📰 Мэдээ мэдээлэл</h2><p>Мэдээ, үйл явдал, мэдэгдэл нэмэх/засах/устгах</p></div>
+        <button class="btn btn-gold" onclick="openNewsForm()">+ Шинэ мэдээ</button>
+      </div>
+
+      <div class="panel-card hidden" id="news-form-card">
+        <div class="pch"><span id="news-form-title">Шинэ мэдээ нэмэх</span></div>
+        <div class="pcb">
+          <div class="error-msg" id="news-error"></div>
+          <form id="news-form">
+            <input type="hidden" id="news-id">
+            <div class="field-row">
+              <div class="field"><label>Төрөл *</label>
+                <select id="news-type"><option value="news">Мэдээ</option><option value="event">Үйл явдал</option><option value="pr">Мэдэгдэл</option></select>
+              </div>
+              <div class="field"><label>Огноо *</label><input type="date" id="news-date" required></div>
+            </div>
+            <div class="field"><label>Гарчиг *</label><input type="text" id="news-title" required></div>
+            <div class="field"><label>Товч тайлбар</label><textarea id="news-summary"></textarea></div>
+            <div class="field"><label>Бүтэн агуулга</label><textarea id="news-content" style="min-height:140px"></textarea></div>
+            <div class="field-row">
+              <div class="field"><label>Эможи (зураг ороогүй үед харагдана)</label><input type="text" id="news-emoji" value="📰" maxlength="4"></div>
+              <div class="field"><label>Байршил (зөвхөн үйл явдалд)</label><input type="text" id="news-location" placeholder="Улаанбаатар"></div>
+            </div>
+            <div class="field">
+              <label>Зураг</label>
+              <div class="image-preview" id="news-img-preview">Зураггүй</div>
+              <input type="file" id="news-image" accept="image/*">
+              <label style="display:flex;align-items:center;gap:6px;margin-top:6px;font-weight:400"><input type="checkbox" id="news-remove-image" style="width:auto"> Одоогийн зургийг устгах</label>
+            </div>
+            <div class="field-row">
+              <div class="field"><label style="display:flex;align-items:center;gap:6px"><input type="checkbox" id="news-featured" style="width:auto"> Нүүр хуудсанд томмоор харуулах</label></div>
+              <div class="field"><label>Эрэмбэ</label><input type="number" id="news-sort" value="0"></div>
+            </div>
+            <div class="actions">
+              <button type="submit" class="btn btn-primary" style="width:auto">Хадгалах</button>
+              <button type="button" class="btn btn-outline" onclick="closeNewsForm()">Цуцлах</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="panel-card">
+        <div class="pch">Мэдээний жагсаалт</div>
+        <div class="pcb" style="padding:0">
+          <table class="admin-tbl">
+            <thead><tr><th>Зураг</th><th>Гарчиг</th><th>Төрөл</th><th>Огноо</th><th>Үйлдэл</th></tr></thead>
+            <tbody id="news-tbody"><tr class="empty-row"><td colspan="5">Ачааллаж байна...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- MEMBERS PANEL -->
+    <section class="cpanel" id="panel-members">
+      <div class="chead">
+        <div><h2>👥 Гишүүд</h2><p>Намын удирдлага, НБД, УИХ, НИТХ гишүүдийг удирдах</p></div>
+        <button class="btn btn-gold" onclick="openMemberForm()">+ Шинэ гишүүн</button>
+      </div>
+
+      <div class="panel-card hidden" id="member-form-card">
+        <div class="pch"><span id="member-form-title">Шинэ гишүүн нэмэх</span></div>
+        <div class="pcb">
+          <div class="error-msg" id="member-error"></div>
+          <form id="member-form">
+            <input type="hidden" id="member-id">
+            <div class="field"><label>Бүлэг *</label>
+              <select id="member-group">
+                <option value="lead">Намын удирдлага</option>
+                <option value="nbd">НБД</option>
+                <option value="uih">УИХ-ын гишүүд</option>
+                <option value="nitx">НИТХ-ын төлөөлөгчид</option>
+              </select>
+            </div>
+            <div class="field"><label>Нэр *</label><input type="text" id="member-name" required></div>
+            <div class="field"><label>Албан тушаал</label><input type="text" id="member-role"></div>
+            <div class="field"><label>Намтар / Тайлбар</label><textarea id="member-description" placeholder="Богино намтар, ажлын туршлага, боловсрол г.м." style="min-height:110px"></textarea></div>
+            <div class="field">
+              <label>Зураг (профайл)</label>
+              <div class="image-preview" id="member-img-preview">Зураггүй</div>
+              <input type="file" id="member-photo" accept="image/*">
+              <label style="display:flex;align-items:center;gap:6px;margin-top:6px;font-weight:400"><input type="checkbox" id="member-remove-photo" style="width:auto"> Одоогийн зургийг устгах</label>
+            </div>
+            <div class="field"><label>Эрэмбэ</label><input type="number" id="member-sort" value="0"></div>
+            <div class="actions">
+              <button type="submit" class="btn btn-primary" style="width:auto">Хадгалах</button>
+              <button type="button" class="btn btn-outline" onclick="closeMemberForm()">Цуцлах</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="panel-card">
+        <div class="pch">Гишүүдийн жагсаалт</div>
+        <div class="pcb" style="padding:0">
+          <table class="admin-tbl">
+            <thead><tr><th>Зураг</th><th>Нэр</th><th>Албан тушаал</th><th>Бүлэг</th><th>Үйлдэл</th></tr></thead>
+            <tbody id="member-tbody"><tr class="empty-row"><td colspan="5">Ачааллаж байна...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- SETTINGS PANEL -->
+    <section class="cpanel" id="panel-settings">
+      <div class="chead"><div><h2>⚙️ Тохиргоо</h2><p>Нэвтрэх нууц үгээ солих</p></div></div>
+      <div class="panel-card">
+        <div class="pch">Нууц үг солих</div>
+        <div class="pcb">
+          <div class="error-msg" id="pw-error"></div>
+          <div class="success-msg" id="pw-success"></div>
+          <form id="pw-form" style="max-width:360px">
+            <div class="field"><label>Одоогийн нууц үг</label><input type="password" id="pw-current" required></div>
+            <div class="field"><label>Шинэ нууц үг (6+ тэмдэгт)</label><input type="password" id="pw-new" required minlength="6"></div>
+            <button type="submit" class="btn btn-primary" style="width:auto">Шинэчлэх</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script src="/admin/admin.js"></script>
+</body>
+</html>
