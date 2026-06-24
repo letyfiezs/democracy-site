@@ -355,26 +355,24 @@ async function openBranch(id) {
   try {
     const res = await fetch('/api/branches/' + id);
     const b = await res.json();
+    const typeLabel = b.type === 'bag' ? 'Баг — Намын хороо' : b.type === 'sum' ? 'Сум — Намын хороо' : 'Дэргэдэх байгууллага';
+    const emoji = b.type === 'bag' ? '🏘️' : b.type === 'sum' ? '🗺️' : '🏛️';
     document.getElementById('brd-name').textContent = b.name;
     document.getElementById('brd-name2').textContent = b.name;
-    document.getElementById('brd-name3').textContent = b.name;
-    document.getElementById('brd-type').textContent = b.type === 'bag' ? 'Баг — Намын хороо' : b.type === 'sum' ? 'Сум — Намын хороо' : 'Дэргэдэх байгууллага';
+    document.getElementById('brd-type').textContent = typeLabel;
+    document.getElementById('brd-type2').textContent = typeLabel;
     document.getElementById('brd-photo').innerHTML = b.image
-      ? `<img src="${b.image}" alt="">`
-      : (b.type === 'bag' ? '🏘️' : b.type === 'sum' ? '🗺️' : '🏛️');
+      ? `<img src="${b.image}" alt="">` : emoji;
     document.getElementById('brd-description').innerHTML = b.description
       ? b.description.replace(/\n/g, '<br>')
       : '<span style="color:var(--gray)">Тайлбар удахгүй нэмэгдэнэ.</span>';
-
     const grid = document.getElementById('brd-members-grid');
     const section = document.getElementById('brd-members-section');
     if (b.members && b.members.length) {
       section.style.display = 'block';
       grid.innerHTML = b.members.map(m => `
         <div class="mcard">
-          <div class="mph">
-            ${m.photo ? `<img src="${m.photo}" alt="">` : '👤'}
-          </div>
+          <div class="mph">${m.photo ? `<img src="${m.photo}" alt="">` : '👤'}</div>
           <div class="minfo">
             <div class="mname">${esc(m.name)}</div>
             <div class="mrole">${esc(m.role || '')}</div>
