@@ -265,47 +265,40 @@
   <div class="bc"><div class="bi"><a href="#" onclick="go('home')">Эхлэл</a> › <strong>Салбар</strong></div></div>
   <div class="sec"><div class="si">
     <div class="tabs">
-      <button class="tbtn on" onclick="btab('cap',this)">Хэрлэн сум (Чойбалсан хот)</button>
+      <button class="tbtn on" onclick="btab('cap',this)">Баг</button>
       <button class="tbtn"    onclick="btab('pro',this)">Сум</button>
       <button class="tbtn"    onclick="btab('org',this)">Дэргэдэх байгууллага</button>
     </div>
-    <div id="bt-cap" class="tpanel on"><div class="ng">
-      <div class="nc"><div class="ntz" style="font-size:36px"><img src="\sumimg\herlen.png"></div><div class="nb"><div class="ntitlez" style="margin-top:8px">1-р Баг</div></div></div>
-      <div class="nc"><div class="ntz" style="font-size:36px"><img src="\sumimg\herlen.png"></div><div class="nb"><div class="ntitlez" style="margin-top:8px">2-р Баг</div></div></div>
-      <div class="nc"><div class="ntz" style="font-size:36px"><img src="\sumimg\herlen.png"></div><div class="nb"><div class="ntitlez" style="margin-top:8px">3-р Баг</div></div></div>
-      <div class="nc"><div class="ntz" style="font-size:36px"><img src="\sumimg\herlen.png"></div><div class="nb"><div class="ntitlez" style="margin-top:8px">4-р Баг</div></div></div>
-      <div class="nc"><div class="ntz" style="font-size:36px"><img src="\sumimg\herlen.png"></div><div class="nb"><div class="ntitlez" style="margin-top:8px">5-р Баг</div></div></div>
-      <div class="nc"><div class="ntz" style="font-size:36px"><img src="\sumimg\herlen.png"></div><div class="nb"><div class="ntitlez" style="margin-top:8px">6-р Баг</div></div></div>
-      <div class="nc"><div class="ntz" style="font-size:36px"><img src="\sumimg\herlen.png"></div><div class="nb"><div class="ntitlez" style="margin-top:8px">7-р Баг</div></div></div>
-      <div class="nc"><div class="ntz" style="font-size:36px"><img src="\sumimg\herlen.png"></div><div class="nb"><div class="ntitlez" style="margin-top:8px">8-р Баг</div></div></div>
-      <div class="nc"><div class="ntz" style="font-size:36px"><img src="\sumimg\herlen.png"></div><div class="nb"><div class="ntitlez" style="margin-top:8px">9-р Баг</div></div></div>
-      <div class="nc"><div class="ntz" style="font-size:36px"><img src="\sumimg\herlen.png"></div><div class="nb"><div class="ntitlez" style="margin-top:8px">10-р Баг</div></div></div>
-      <div class="nc"><div class="ntz" style="font-size:36px"><img src="\sumimg\herlen.png"></div><div class="nb"><div class="ntitlez" style="margin-top:8px">11-р Баг</div></div></div>
+    <div id="bt-cap" class="tpanel on"><div class="ng" id="branch-bag-grid">
+      <div class="empty-state">Ачааллаж байна...</div>
     </div></div>
-    <div id="bt-pro" class="tpanel"><div class="ng">
-      <div class="nc"><div class="ntz" style="font-size:36px"><img src="\sumimg\bayanuul.jpg"></div><div class="nb"><div class="ntitlez" style="margin-top:8px">Баян-Уул Сум</div></div></div>
-      <div class="nc"><div class="ntz" style="font-size:36px"><img src="\sumimg\bayandun.png"></div><div class="nb"><div class="ntitlez" style="margin-top:8px">Баяндун Сум</div></div></div>
-      <div class="nc"><div class="ntz" style="font-size:36px"><img src="\sumimg\bayantumen.png"></div><div class="nb"><div class="ntitlez" style="margin-top:8px">Баянтүмэн Сум</div></div></div>
-      <div class="nc"><div class="ntz" style="font-size:36px"><img src="\sumimg\bulgan.png"></div><div class="nb"><div class="ntitlez" style="margin-top:8px">Булган Сум</div></div></div>
-      <div class="nc"><div class="ntz" style="font-size:36px"><img src="\sumimg\gurvanzagal.png"></div><div class="nb"><div class="ntitlez" style="margin-top:8px">Гурванзагал Сум</div></div></div>
-      <div class="nc"><div class="ntz" style="font-size:36px"><img src="\sumimg\dashbalbar.png"></div><div class="nb"><div class="ntitlez" style="margin-top:8px">Дашбалбар Сум</div></div></div>
-      <div class="nc"><div class="ntz" style="font-size:36px"><img src="\sumimg\matad.png"></div><div class="nb"><div class="ntitlez" style="margin-top:8px">Матад Сум</div></div></div>
-      <div class="nc"><div class="ntz" style="font-size:36px"><img src="\sumimg\sergelen.png"></div><div class="nb"><div class="ntitlez" style="margin-top:8px">Сэргэлэн Сум</div></div></div>
-      <div class="nc"><div class="ntz" style="font-size:36px"><img src="\sumimg\halhgol.png"></div><div class="nb"><div class="ntitlez" style="margin-top:8px">Халхгол Сум</div></div></div>
-      <div class="nc"><div class="ntz" style="font-size:36px"><img src="\sumimg\hulunbuir.png"></div><div class="nb"><div class="ntitlez" style="margin-top:8px">Хөлөнбуйр Сум</div></div></div>
-      <div class="nc"><div class="ntz" style="font-size:36px"><img src="\sumimg\tsagaanovoo.png"></div><div class="nb"><div class="ntitlez" style="margin-top:8px">Цагаан-Овоо Сум</div></div></div>
-      <div class="nc"><div class="ntz" style="font-size:36px"><img src="\sumimg\choibalsan.png"></div><div class="nb"><div class="ntitlez" style="margin-top:8px">Чойбалсан Сум</div></div></div>
-      <div class="nc"><div class="ntz" style="font-size:36px"><img src="\sumimg\chuluunhoroot.jpg"></div><div class="nb"><div class="ntitlez" style="margin-top:8px">Чулуунхороот Сум</div></div></div>
-
-
+    <div id="bt-pro" class="tpanel"><div class="ng" id="branch-sum-grid">
+      <div class="empty-state">Ачааллаж байна...</div>
     </div></div>
-    <div id="bt-org" class="tpanel">
-      <ul style="list-style:none;display:flex;flex-direction:column;gap:12px;max-width:600px">
-        <li style="padding:18px;border:1px solid var(--border);border-radius:10px;display:flex;align-items:center;gap:14px"><span style="font-size:22px">👴</span><div><strong style="font-size:14px">Дорнод аймгийн ардчилсан ахмадын холбоо </strong><div style="font-size:12px;color:var(--gray);margin-top:3px">Судалгаа, сургалт, хөгжлийн байгууллага</div></div></li>
-        <li style="padding:18px;border:1px solid var(--border);border-radius:10px;display:flex;align-items:center;gap:14px"><span style="font-size:22px">👩</span><div><strong style="font-size:14px">Дорнод аймгийн ардчилсан эмэгтэйчүүдийн холбоо </strong><div style="font-size:12px;color:var(--gray);margin-top:3px">Судалгаа, сургалт, хөгжлийн байгууллага</div></div></li>
-        <li style="padding:18px;border:1px solid var(--border);border-radius:10px;display:flex;align-items:center;gap:14px"><span style="font-size:22px">👨</span><div><strong style="font-size:14px">Дорнод аймгийн ардчилсан залуучуудын холбоо</strong><div style="font-size:12px;color:var(--gray);margin-top:3px">Эмэгтэйчүүдийн эрхийг хамгаалах байгууллага</div></div></li>
-        <li style="padding:18px;border:1px solid var(--border);border-radius:10px;display:flex;align-items:center;gap:14px"><span style="font-size:22px">🎓</span><div><strong style="font-size:14px">Дорнод аймгийн ардчилсан оюутны холбоо</strong><div style="font-size:12px;color:var(--gray);margin-top:3px">Залуу үеийн хөгжлийг дэмжих байгууллага</div></div></li>
-      </ul>
+    <div id="bt-org" class="tpanel"><div class="ng" id="branch-org-grid">
+      <div class="empty-state">Ачааллаж байна...</div>
+    </div></div>
+  </div></div>
+</div>
+
+<!-- ════ BRANCH DETAIL ════ -->
+<div id="pg-branchdetail" class="pg">
+  <div class="bc"><div class="bi"><a href="#" onclick="go('branch')">Салбар</a> › <strong id="brd-name">—</strong></div></div>
+  <div class="sec"><div class="si">
+    <div class="mdetail">
+      <div class="mdleft">
+        <div class="mdphoto" id="brd-photo">🏢</div>
+        <div class="mdname" id="brd-name2">—</div>
+        <div class="mdrole" id="brd-type">—</div>
+      </div>
+      <div class="mdright">
+        <h2 id="brd-name3" style="margin-bottom:10px"></h2>
+        <div class="mddesc" id="brd-description"></div>
+        <div id="brd-members-section" style="margin-top:32px">
+          <h3 style="font-size:15px;font-weight:700;color:var(--dark);margin-bottom:16px;padding-bottom:8px;border-bottom:2px solid var(--blue)">Удирдлага, гишүүд</h3>
+          <div class="ng" id="brd-members-grid"></div>
+        </div>
+      </div>
     </div>
   </div></div>
 </div>

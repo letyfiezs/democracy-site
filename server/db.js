@@ -56,6 +56,12 @@ CREATE TABLE IF NOT EXISTS settings (
 );
 `);
 
+// Migration: branches & branch_members (for older DBs)
+try {
+  db.exec('CREATE TABLE IF NOT EXISTS branches (id INTEGER PRIMARY KEY AUTOINCREMENT, type TEXT NOT NULL DEFAULT \'bag\', name TEXT NOT NULL, description TEXT, image TEXT, sort_order INTEGER DEFAULT 0)');
+  db.exec('CREATE TABLE IF NOT EXISTS branch_members (id INTEGER PRIMARY KEY AUTOINCREMENT, branch_id INTEGER NOT NULL, name TEXT NOT NULL, role TEXT, description TEXT, photo TEXT, date TEXT, sort_order INTEGER DEFAULT 0)');
+} catch(e) {}
+
 // Migration: add `description` column to members table if it doesn't exist yet
 // (for databases created before this field was introduced)
 const memberCols = db.prepare("PRAGMA table_info(members)").all().map(c => c.name);
@@ -109,6 +115,16 @@ if (heroCount === 0) {
   insertH.run('Democracy Tour', 'Ардчиллын үнэт зүйлийг түгээн дэлгэрүүлэх "Democracy Tour" эхэллээ',
     'Орон даяар иргэдтэй шууд уулзаж, ардчиллын үнэт зүйлсийг дэлгэрүүлэх аяллыг эхлүүллээ.',
     'linear-gradient(150deg,#06331f 0%,#0b5c38 55%,#138a55 100%)', '', '', '', '', 3);
+}
+
+// Seed default org branches if none exist
+const orgCount = db.prepare("SELECT COUNT(*) AS c FROM branches WHERE type = 'org'").get().c;
+if (orgCount === 0) {
+  const insertB = db.prepare('INSERT INTO branches (type,name,description,sort_order) VALUES (?,?,?,?)');
+  insertB.run('org', 'Дорнод аймгийн ардчилсан ахмадын холбоо', 'Судалгаа, сургалт, хөгжлийн байгууллага', 1);
+  insertB.run('org', 'Дорнод аймгийн ардчилсан эмэгтэйчүүдийн холбоо', 'Судалгаа, сургалт, хөгжлийн байгууллага', 2);
+  insertB.run('org', 'Дорнод аймгийн ардчилсан залуучуудын холбоо', 'Эмэгтэйчүүдийн эрхийг хамгаалах байгууллага', 3);
+  insertB.run('org', 'Дорнод аймгийн ардчилсан оюутны холбоо', 'Залуу үеийн хөгжлийг дэмжих байгууллага', 4);
 }
 
 module.exports = db;

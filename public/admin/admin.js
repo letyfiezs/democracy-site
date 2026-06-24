@@ -69,7 +69,7 @@ function showPanel(name, el) {
   el.closest('li').classList.add('on');
 }
 
-function loadAll() { loadHeroList(); loadNewsList(); loadMemberList(); }
+function loadAll() { loadHeroList(); loadNewsList(); loadMemberList(); loadBranchList(); }
 
 // generic image preview wiring
 function wireImagePreview(inputId, previewId, existingUrl) {
@@ -341,3 +341,188 @@ function escapeHtml(str) {
 }
 
 checkAuth();
+
+// ============ BRANCHES ============
+let branchCache = [];
+let activeBranchId = null;
+
+async function loadBranchList() {
+  const res = await fetch('/api/branches');
+  branchCache = await res.json();
+  const tbody = document.getElementById('branch-tbody');
+  if (!branchCache.length) { tbody.innerHTML = '<tr class="empty-row"><td colspan="5">Салбар алга байна</td></tr>'; return; }
+  const typeLabel = t => t === 'bag' ? 'Баг' : t === 'sum' ? 'Сум' : 'Дэргэдэх байгууллага';
+  tbody.innerHTML = branchCache.map(b => `
+    <tr>
+      <td><div class="row-thumb">${b.image ? `<img src="${b.image}">` : '🗺️'}</div></td>
+      <td>${escapeHtml(b.name)}</td>
+      <td>${typeLabel(b.type)}</td>
+      <td>${b.sort_order}</td>
+      <td class="actions">
+        <button class="btn btn-sm btn-outline" onclick="expandBranchMembers(${b.id},'${escapeHtml(b.name)}')">👥 Гишүүд</button>
+        <button class="btn btn-sm btn-outline" onclick="editBranch(${b.id})">✏️</button>
+        <button class="btn btn-sm btn-danger" onclick="deleteBranch(${b.id})">🗑️</button>
+      </td>
+    </tr>`).join('');
+}
+
+function openBranchForm() {
+  document.getElementById('branch-id').value = '';
+  document.getElementById('branch-form-title').textContent = 'Шинэ салбар нэмэх';
+  document.getElementById('branch-form').reset();
+  document.getElementById('branch-img-preview').innerHTML = 'Зураггүй';
+  document.getElementById('branch-error').style.display = 'none';
+  wireImagePreview('branch-image', 'branch-img-preview', null);
+  document.getElementById('branch-form-card').classList.remove('hidden');
+  document.getElementById('branch-form-card').scrollIntoView({ behavior:'smooth' });
+}
+function closeBranchForm() { document.getElementById('branch-form-card').classList.add('hidden'); }
+
+function editBranch(id) {
+  const b = branchCache.find(x => x.id === id);
+  if (!b) return;
+  document.getElementById('branch-id').value = b.id;
+  document.getElementById('branch-form-title').textContent = 'Салбар засах';
+  document.getElementById('branch-type').value = b.type;
+  document.getElementById('branch-name').value = b.name;
+  document.getElementById('branch-description').value = b.description || '';
+  document.getElementById('branch-sort').value = b.sort_order;
+  document.getElementById('branch-remove-image').checked = false;
+  wireImagePreview('branch-image', 'branch-img-preview', b.image || null);
+  document.getElementById('branch-error').style.display = 'none';
+  document.getElementById('branch-form-card').classList.remove('hidden');
+  document.getElementById('branch-form-card').scrollIntoView({ behavior:'smooth' });
+}
+
+document.getElementById('branch-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const id = document.getElementById('branch-id').value;
+  const fd = new FormData();
+  fd.append('type', document.getElementById('branch-type').value);
+  fd.append('name', document.getElementById('branch-name').value);
+  fd.append('description', document.getElementById('branch-description').value);
+  fd.append('sort_order', document.getElementById('branch-sort').value);
+  const img = document.getElementById('branch-image').files[0];
+  if (img) fd.append('image', img);
+  if (document.getElementById('branch-remove-image').checked) fd.append('removeImage', 'true');
+  const errEl = document.getElementById('branch-error');
+  errEl.style.display = 'none';
+  try {
+    const res = await fetch(id ? `/api/branches/${id}` : '/api/branches', {
+      method: id ? 'PUT' : 'POST', body: fd
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Алдаа');
+    closeBranchForm();
+    await loadBranchList();
+  } catch(err) { errEl.textContent = err.message; errEl.style.display = 'block'; }
+});
+
+async function deleteBranch(id) {
+  if (!confirm('Салбарыг устгах уу? Дотор гишүүд бүгд устана.')) return;
+  await fetch(`/api/branches/${id}`, { method:'DELETE' });
+  if (activeBranchId === id) {
+    activeBranchId = null;
+    document.getElementById('branch-members-panel').classList.add('hidden');
+  }
+  loadBranchList();
+}
+
+// ── Branch Members ──────────────────────────
+let branchMemberCache = [];
+
+async function expandBranchMembers(branchId, branchName) {
+  activeBranchId = branchId;
+  document.getElementById('branch-members-title').textContent = branchName + ' — Гишүүд';
+  document.getElementById('branch-members-panel').classList.remove('hidden');
+  document.getElementById('branch-members-panel').scrollIntoView({ behavior:'smooth' });
+  await loadBranchMemberList();
+}
+
+async function loadBranchMemberList() {
+  const res = await fetch(`/api/branches/${activeBranchId}`);
+  const data = await res.json();
+  branchMemberCache = data.members || [];
+  const tbody = document.getElementById('branchmember-tbody');
+  if (!branchMemberCache.length) { tbody.innerHTML = '<tr class="empty-row"><td colspan="5">Гишүүн алга байна</td></tr>'; return; }
+  tbody.innerHTML = branchMemberCache.map(m => `
+    <tr>
+      <td><div class="row-thumb">${m.photo ? `<img src="${m.photo}">` : '👤'}</div></td>
+      <td>${escapeHtml(m.name)}</td>
+      <td>${escapeHtml(m.role || '—')}</td>
+      <td>${escapeHtml(m.date || '—')}</td>
+      <td class="actions">
+        <button class="btn btn-sm btn-outline" onclick="editBranchMember(${m.id})">✏️</button>
+        <button class="btn btn-sm btn-danger" onclick="deleteBranchMember(${m.id})">🗑️</button>
+      </td>
+    </tr>`).join('');
+}
+
+function openBranchMemberForm() {
+  if (!activeBranchId) return;
+  document.getElementById('branchmember-id').value = '';
+  document.getElementById('branchmember-branch-id').value = activeBranchId;
+  document.getElementById('branchmember-form-title').textContent = 'Шинэ гишүүн нэмэх';
+  document.getElementById('branchmember-form').reset();
+  document.getElementById('branchmember-img-preview').innerHTML = 'Зураггүй';
+  document.getElementById('branchmember-error').style.display = 'none';
+  wireImagePreview('branchmember-photo', 'branchmember-img-preview', null);
+  document.getElementById('branchmember-form-card').classList.remove('hidden');
+  document.getElementById('branchmember-form-card').scrollIntoView({ behavior:'smooth' });
+}
+function closeBranchMemberForm() { document.getElementById('branchmember-form-card').classList.add('hidden'); }
+
+function editBranchMember(id) {
+  const m = branchMemberCache.find(x => x.id === id);
+  if (!m) return;
+  document.getElementById('branchmember-id').value = m.id;
+  document.getElementById('branchmember-branch-id').value = activeBranchId;
+  document.getElementById('branchmember-form-title').textContent = 'Гишүүн засах';
+  document.getElementById('branchmember-name').value = m.name;
+  document.getElementById('branchmember-role').value = m.role || '';
+  document.getElementById('branchmember-date').value = m.date || '';
+  document.getElementById('branchmember-description').value = m.description || '';
+  document.getElementById('branchmember-sort').value = m.sort_order;
+  document.getElementById('branchmember-remove-photo').checked = false;
+  wireImagePreview('branchmember-photo', 'branchmember-img-preview', m.photo || null);
+  document.getElementById('branchmember-error').style.display = 'none';
+  document.getElementById('branchmember-form-card').classList.remove('hidden');
+  document.getElementById('branchmember-form-card').scrollIntoView({ behavior:'smooth' });
+}
+
+document.getElementById('branchmember-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const id = document.getElementById('branchmember-id').value;
+  const bid = document.getElementById('branchmember-branch-id').value;
+  const fd = new FormData();
+  fd.append('name', document.getElementById('branchmember-name').value);
+  fd.append('role', document.getElementById('branchmember-role').value);
+  fd.append('date', document.getElementById('branchmember-date').value);
+  fd.append('description', document.getElementById('branchmember-description').value);
+  fd.append('sort_order', document.getElementById('branchmember-sort').value);
+  const photo = document.getElementById('branchmember-photo').files[0];
+  if (photo) fd.append('photo', photo);
+  if (document.getElementById('branchmember-remove-photo').checked) fd.append('removePhoto', 'true');
+  const errEl = document.getElementById('branchmember-error');
+  errEl.style.display = 'none';
+  try {
+    const url = id ? `/api/branches/${bid}/members/${id}` : `/api/branches/${bid}/members`;
+    const res = await fetch(url, { method: id ? 'PUT' : 'POST', body: fd });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Алдаа');
+    closeBranchMemberForm();
+    await loadBranchMemberList();
+  } catch(err) { errEl.textContent = err.message; errEl.style.display = 'block'; }
+});
+
+async function deleteBranchMember(id) {
+  if (!confirm('Гишүүнийг устгах уу?')) return;
+  await fetch(`/api/branches/${activeBranchId}/members/${id}`, { method:'DELETE' });
+  loadBranchMemberList();
+}
+
+function escapeHtml(s) {
+  if (!s) return '';
+  return String(s).replace(/[&<>"']/g, c =>
+    ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}

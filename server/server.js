@@ -7,6 +7,7 @@ const authRoutes = require('./routes/auth');
 const newsRoutes = require('./routes/news');
 const membersRoutes = require('./routes/members');
 const heroRoutes = require('./routes/hero');
+const branchRoutes = require('./routes/branches');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -32,6 +33,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/news', newsRoutes);
 app.use('/api/members', membersRoutes);
 app.use('/api/hero', heroRoutes);
+app.use('/api/branches', branchRoutes);
 
 // Error handler (e.g. multer file-type errors)
 app.use((err, req, res, next) => {

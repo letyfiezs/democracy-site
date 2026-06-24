@@ -7,7 +7,7 @@ const navMap = {
   home: 0, about: 1, ideology: 1, rules: 1,
   members: 1, memberdetail: 1,
   news: 2, newsdetail: 2,
-  branch: 3, finance: 4
+  branch: 3, branchdetail: 3, finance: 4
 };
 
 function go(name) {
@@ -303,6 +303,92 @@ function goTab(group) {
 // }
 
 
+
+// ── BRANCHES ──────────────────────────────────
+let branchesCache = [];
+
+async function loadBranches() {
+  try {
+    const res = await fetch('/api/branches');
+    branchesCache = await res.json();
+    renderBranchGrid('bag', 'branch-bag-grid');
+    renderBranchGrid('sum', 'branch-sum-grid');
+    renderBranchGrid('org', 'branch-org-grid');
+  } catch (e) { console.error('Branches load failed', e); }
+}
+
+function renderBranchGrid(type, gridId) {
+  const list = branchesCache.filter(b => b.type === type);
+  const el = document.getElementById(gridId);
+  if (!el) return;
+  if (!list.length) {
+    el.innerHTML = '<div class="empty-state">Мэдээлэл алга байна.</div>';
+    return;
+  }
+  const emoji = type === 'bag' ? '🏘️' : type === 'sum' ? '🗺️' : '🏛️';
+  if (type === 'org') {
+    el.style.cssText = 'display:flex;flex-direction:column;gap:12px;max-width:600px';
+    el.innerHTML = list.map(b => `
+      <div onclick="openBranch(${b.id})" style="cursor:pointer;padding:18px;border:1px solid var(--border);border-radius:10px;display:flex;align-items:center;gap:14px;transition:box-shadow .2s" onmouseover="this.style.boxShadow='0 4px 16px rgba(0,0,0,.1)'" onmouseout="this.style.boxShadow=''">
+        <span style="font-size:22px">${b.image ? `<img src="${b.image}" style="width:36px;height:36px;object-fit:cover;border-radius:6px">` : emoji}</span>
+        <div>
+          <strong style="font-size:14px">${esc(b.name)}</strong>
+          ${b.description ? `<div style="font-size:12px;color:var(--gray);margin-top:3px">${truncate(b.description,80)}</div>` : ''}
+        </div>
+      </div>`).join('');
+  } else {
+    el.style.cssText = '';
+    el.innerHTML = list.map(b => `
+      <div class="nc" onclick="openBranch(${b.id})" style="cursor:pointer">
+        <div class="ntz" style="font-size:36px">
+          ${b.image ? `<img src="${b.image}" alt="">` : emoji}
+        </div>
+        <div class="nb">
+          <div class="ntitlez" style="margin-top:8px">${esc(b.name)}</div>
+          ${b.description ? `<div style="font-size:12px;color:var(--gray);margin-top:4px">${truncate(b.description,60)}</div>` : ''}
+        </div>
+      </div>`).join('');
+  }
+}
+
+async function openBranch(id) {
+  try {
+    const res = await fetch('/api/branches/' + id);
+    const b = await res.json();
+    document.getElementById('brd-name').textContent = b.name;
+    document.getElementById('brd-name2').textContent = b.name;
+    document.getElementById('brd-name3').textContent = b.name;
+    document.getElementById('brd-type').textContent = b.type === 'bag' ? 'Баг — Намын хороо' : b.type === 'sum' ? 'Сум — Намын хороо' : 'Дэргэдэх байгууллага';
+    document.getElementById('brd-photo').innerHTML = b.image
+      ? `<img src="${b.image}" alt="">`
+      : (b.type === 'bag' ? '🏘️' : b.type === 'sum' ? '🗺️' : '🏛️');
+    document.getElementById('brd-description').innerHTML = b.description
+      ? b.description.replace(/\n/g, '<br>')
+      : '<span style="color:var(--gray)">Тайлбар удахгүй нэмэгдэнэ.</span>';
+
+    const grid = document.getElementById('brd-members-grid');
+    const section = document.getElementById('brd-members-section');
+    if (b.members && b.members.length) {
+      section.style.display = 'block';
+      grid.innerHTML = b.members.map(m => `
+        <div class="mcard">
+          <div class="mph">
+            ${m.photo ? `<img src="${m.photo}" alt="">` : '👤'}
+          </div>
+          <div class="minfo">
+            <div class="mname">${esc(m.name)}</div>
+            <div class="mrole">${esc(m.role || '')}</div>
+            ${m.date ? `<div style="font-size:11px;color:var(--gray);margin-top:2px">📅 ${m.date}</div>` : ''}
+            ${m.description ? `<div class="mdesc">${truncate(m.description, 120)}</div>` : ''}
+          </div>
+        </div>`).join('');
+    } else {
+      section.style.display = 'none';
+    }
+    go('branchdetail');
+  } catch (e) { console.error('Branch load failed', e); }
+}
+
 // ── STATIC PAGE HELPERS ───────────────────────
 function tog(h) {
   h.classList.toggle('open');
@@ -329,4 +415,5 @@ document.addEventListener('DOMContentLoaded', () => {
   loadHero();
   loadNews();
   loadMembers();
+  loadBranches();
 });

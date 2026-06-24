@@ -32,6 +32,7 @@
       <li class="on"><a onclick="showPanel('hero',this)">🖼️ Header зурагнууд</a></li>
       <li><a onclick="showPanel('news',this)">📰 Мэдээ мэдээлэл</a></li>
       <li><a onclick="showPanel('members',this)">👥 Гишүүд</a></li>
+      <li><a onclick="showPanel('branches',this)">🗺️ Салбар (Баг/Сум)</a></li>
       <li><a onclick="showPanel('settings',this)">⚙️ Тохиргоо</a></li>
       <li><a href="/" target="_blank">🌐 Сайт үзэх ↗</a></li>
     </ul>
@@ -198,6 +199,95 @@
           <table class="admin-tbl">
             <thead><tr><th>Зураг</th><th>Нэр</th><th>Албан тушаал</th><th>Бүлэг</th><th>Үйлдэл</th></tr></thead>
             <tbody id="member-tbody"><tr class="empty-row"><td colspan="5">Ачааллаж байна...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- BRANCHES PANEL -->
+    <section class="cpanel" id="panel-branches">
+      <div class="chead">
+        <div><h2>🗺️ Салбар удирдах</h2><p>Баг болон Сумын намын хороодыг удирдах</p></div>
+        <button class="btn btn-gold" onclick="openBranchForm()">+ Шинэ салбар</button>
+      </div>
+
+      <div class="panel-card hidden" id="branch-form-card">
+        <div class="pch"><span id="branch-form-title">Шинэ салбар нэмэх</span></div>
+        <div class="pcb">
+          <div class="error-msg" id="branch-error"></div>
+          <form id="branch-form">
+            <input type="hidden" id="branch-id">
+            <div class="field"><label>Төрөл *</label>
+              <select id="branch-type">
+                <option value="bag">Баг — Намын хороо</option>
+                <option value="sum">Сум — Намын хороо</option>
+                <option value="org">Дэргэдэх байгууллага</option>
+              </select>
+            </div>
+            <div class="field"><label>Нэр *</label><input type="text" id="branch-name" required placeholder="1-р Баг / Баяндун Сум"></div>
+            <div class="field"><label>Тайлбар / Ажлын тайлан</label><textarea id="branch-description" style="min-height:110px" placeholder="Багийн товч тайлбар, ажлын тайлан..."></textarea></div>
+            <div class="field">
+              <label>Зураг</label>
+              <div class="image-preview" id="branch-img-preview">Зураггүй</div>
+              <input type="file" id="branch-image" accept="image/*">
+              <label style="display:flex;align-items:center;gap:6px;margin-top:6px;font-weight:400"><input type="checkbox" id="branch-remove-image" style="width:auto"> Одоогийн зургийг устгах</label>
+            </div>
+            <div class="field"><label>Эрэмбэ</label><input type="number" id="branch-sort" value="0"></div>
+            <div class="actions">
+              <button type="submit" class="btn btn-primary" style="width:auto">Хадгалах</button>
+              <button type="button" class="btn btn-outline" onclick="closeBranchForm()">Цуцлах</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Branch member form -->
+      <div class="panel-card hidden" id="branchmember-form-card">
+        <div class="pch"><span id="branchmember-form-title">Гишүүн нэмэх</span></div>
+        <div class="pcb">
+          <div class="error-msg" id="branchmember-error"></div>
+          <form id="branchmember-form">
+            <input type="hidden" id="branchmember-id">
+            <input type="hidden" id="branchmember-branch-id">
+            <div class="field"><label>Нэр *</label><input type="text" id="branchmember-name" required></div>
+            <div class="field"><label>Албан тушаал</label><input type="text" id="branchmember-role" placeholder="Дарга, Гишүүн..."></div>
+            <div class="field"><label>Огноо (томилогдсон эсвэл ажилласан)</label><input type="text" id="branchmember-date" placeholder="2024-01-15"></div>
+            <div class="field"><label>Тайлбар / Намтар</label><textarea id="branchmember-description" style="min-height:90px"></textarea></div>
+            <div class="field">
+              <label>Зураг</label>
+              <div class="image-preview" id="branchmember-img-preview">Зураггүй</div>
+              <input type="file" id="branchmember-photo" accept="image/*">
+              <label style="display:flex;align-items:center;gap:6px;margin-top:6px;font-weight:400"><input type="checkbox" id="branchmember-remove-photo" style="width:auto"> Одоогийн зургийг устгах</label>
+            </div>
+            <div class="field"><label>Эрэмбэ</label><input type="number" id="branchmember-sort" value="0"></div>
+            <div class="actions">
+              <button type="submit" class="btn btn-primary" style="width:auto">Хадгалах</button>
+              <button type="button" class="btn btn-outline" onclick="closeBranchMemberForm()">Цуцлах</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="panel-card">
+        <div class="pch">Салбаруудын жагсаалт</div>
+        <div class="pcb" style="padding:0">
+          <table class="admin-tbl">
+            <thead><tr><th>Зураг</th><th>Нэр</th><th>Төрөл</th><th>Эрэмбэ</th><th>Үйлдэл</th></tr></thead>
+            <tbody id="branch-tbody"><tr class="empty-row"><td colspan="5">Ачааллаж байна...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Expanded branch members sub-panel -->
+      <div class="panel-card hidden" id="branch-members-panel">
+        <div class="pch" style="display:flex;justify-content:space-between;align-items:center">
+          <span id="branch-members-title">Гишүүд</span>
+          <button class="btn btn-gold btn-sm" onclick="openBranchMemberForm()">+ Гишүүн нэмэх</button>
+        </div>
+        <div class="pcb" style="padding:0">
+          <table class="admin-tbl">
+            <thead><tr><th>Зураг</th><th>Нэр</th><th>Албан тушаал</th><th>Огноо</th><th>Үйлдэл</th></tr></thead>
+            <tbody id="branchmember-tbody"><tr class="empty-row"><td colspan="5">Гишүүн алга байна</td></tr></tbody>
           </table>
         </div>
       </div>
