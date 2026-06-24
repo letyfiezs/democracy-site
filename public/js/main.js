@@ -1,10 +1,20 @@
-// ============ PAGE NAV ============
-const navMap = { home: 0, about: 1, ideology: 1, rules: 1, members: 1, memberdetail: 1, news: 2, newsdetail: 2, branch: 3, finance: 4 };
+/* ═══════════════════════════════════════
+   АРДЧИЛСАН НАМ — Frontend (API-driven)
+   ═══════════════════════════════════════ */
+
+// ── PAGE NAV ──────────────────────────────────
+const navMap = {
+  home: 0, about: 1, ideology: 1, rules: 1,
+  members: 1, memberdetail: 1,
+  news: 2, newsdetail: 2,
+  branch: 3, finance: 4
+};
+
 function go(name) {
   document.querySelectorAll('.pg').forEach(p => p.classList.remove('on'));
-  const target = document.getElementById('pg-' + name);
-  if (target) target.classList.add('on');
-  document.querySelectorAll('nav>ul>li').forEach(l => l.classList.remove('act'));
+  const pg = document.getElementById('pg-' + name);
+  if (pg) pg.classList.add('on');
+  document.querySelectorAll('nav>ul>li').forEach(li => li.classList.remove('act'));
   const idx = navMap[name];
   if (idx !== undefined) {
     const items = document.querySelectorAll('nav>ul>li');
@@ -13,203 +23,243 @@ function go(name) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-function openNews(id) {
-  const item = window.__newsCache.find(n => String(n.id) === String(id));
-  if (!item) return go('news');
-  document.getElementById('nd-title').textContent = (typeIcon(item.type)) + ' ' + item.title;
-  document.getElementById('nd-date').textContent = formatDate(item.date) + (item.location ? ' • ' + item.location : '');
-  const img = item.image ? `<img src="${item.image}" style="width:100%;border-radius:8px;margin-bottom:18px">` : '';
-  const content = item.content ? item.content.replace(/\n/g, '<br>') : (item.summary || '');
-  document.getElementById('nd-body').innerHTML = img + `<p>${content || 'Дэлгэрэнгүй мэдээлэл удахгүй нэмэгдэнэ.'}</p>`;
-  go('newsdetail');
+// ── HERO ──────────────────────────────────────
+let heroSlides = [];
+let heroIdx = 0;
+let heroTimer = null;
+
+function renderHero() {
+  if (!heroSlides.length) return;
+  const main = heroSlides[heroIdx];
+  const mainEl = document.getElementById('hero-main');
+  const sidEl  = document.getElementById('hero-side');
+
+  const mainBg = main.image
+    ? `background-image:url('${main.image}')`
+    : `background:${main.gradient || 'linear-gradient(150deg,#0d3a8e,#1a4db5)'}`;
+
+  mainEl.className = 'hcard';
+  mainEl.style.cssText = mainBg;
+  mainEl.onclick = e => { if (!e.target.closest('button')) go(main.btn1_target || 'news'); };
+  mainEl.innerHTML = `
+    <div class="hcard-body">
+      ${main.tag ? `<div class="htag">${main.tag}</div>` : ''}
+      <h1>${main.title}</h1>
+      ${main.description ? `<p>${main.description}</p>` : ''}
+      ${main.btn1_text ? `<button class="hbtn" onclick="event.stopPropagation();go('${main.btn1_target||'news'}')">${main.btn1_text} →</button>` : ''}
+      ${heroSlides.length > 1 ? `<div class="hdots">${heroSlides.map((_,i) =>
+        `<div class="hdot${i===heroIdx?' on':''}" onclick="event.stopPropagation();goslide(${i})"></div>`
+      ).join('')}</div>` : ''}
+    </div>`;
+
+  if (heroSlides.length > 1) {
+    const others = heroSlides.filter((_, i) => i !== heroIdx).slice(0, 2);
+    sidEl.innerHTML = others.map(s => {
+      const i = heroSlides.indexOf(s);
+      const bg = s.image ? `background-image:url('${s.image}')` : `background:${s.gradient||'linear-gradient(150deg,#0d3a8e,#1a4db5)'}`;
+      return `<div class="hcard-side" style="${bg}" onclick="goslide(${i})">
+        <div class="hcs-body">
+          ${s.tag ? `<div class="hcs-cat">${s.tag}</div>` : ''}
+          <h4>${s.title}</h4>
+        </div>
+      </div>`;
+    }).join('');
+  } else {
+    sidEl.innerHTML = '';
+  }
 }
 
-function typeIcon(t) { return t === 'event' ? '📅' : t === 'pr' ? '📣' : '📰'; }
-
-// ============ HERO SLIDER ============
-let si = 0;
-let slideCount = 0;
 function goslide(n) {
-  if (slideCount === 0) return;
-  si = (n + slideCount) % slideCount;
-  document.getElementById('hsl').style.transform = `translateX(-${si * 100}%)`;
-  document.querySelectorAll('.hdot').forEach((d, i) => d.classList.toggle('on', i === si));
+  if (!heroSlides.length) return;
+  heroIdx = (n + heroSlides.length) % heroSlides.length;
+  renderHero();
 }
-function slide(d) { goslide(si + d); }
-let sliderTimer = null;
-function startSliderTimer() {
-  if (sliderTimer) clearInterval(sliderTimer);
-  sliderTimer = setInterval(() => slide(1), 5500);
-}
+function slide(d) { goslide(heroIdx + d); }
 
 async function loadHero() {
   try {
     const res = await fetch('/api/hero');
-    const slides = await res.json();
-    const hsl = document.getElementById('hsl');
-    const dots = document.getElementById('hdots');
-    if (!slides.length) {
-      hsl.innerHTML = `<div class="hslide" style="background:linear-gradient(135deg,#001f5c,#1565c0)"><div class="hi"><h1>Ардчилсан Нам</h1></div></div>`;
-      dots.innerHTML = '';
-      slideCount = 1;
+    heroSlides = await res.json();
+    if (!heroSlides.length) {
+      const el = document.getElementById('hero-main');
+      el.className = 'hcard';
+      el.style.background = 'linear-gradient(150deg,#0d3a8e,#1a4db5)';
+      el.innerHTML = '<div class="hcard-body"><h1>Ардчилсан Нам</h1></div>';
+      document.getElementById('hero-side').innerHTML = '';
       return;
     }
-    slideCount = slides.length;
-    hsl.innerHTML = slides.map(s => {
-      const bg = s.image ? `style="background-image:url('${s.image}')"` : (s.gradient ? `style="background:${s.gradient}"` : '');
-      const cls = s.image ? 'hslide has-img' : 'hslide';
-      const btns = [];
-      if (s.btn1_text) btns.push(`<button class="btn btn-g" onclick="go('${s.btn1_target || 'news'}')">${s.btn1_text}</button>`);
-      if (s.btn2_text) btns.push(`<button class="btn btn-w" onclick="go('${s.btn2_target || 'about'}')">${s.btn2_text}</button>`);
-      return `<div class="${cls}" ${bg}><div class="hi">
-        ${s.tag ? `<div class="htag">${s.tag}</div>` : ''}
-        <h1>${s.title}</h1>
-        ${s.description ? `<p>${s.description}</p>` : ''}
-        ${btns.length ? `<div class="hbtns">${btns.join('')}</div>` : ''}
-      </div></div>`;
-    }).join('');
-    dots.innerHTML = slides.map((_, i) => `<div class="hdot${i === 0 ? ' on' : ''}" onclick="goslide(${i})"></div>`).join('');
-    si = 0;
-    startSliderTimer();
-  } catch (e) {
-    console.error('Hero load failed', e);
-  }
+    heroIdx = 0;
+    renderHero();
+    if (heroSlides.length > 1) {
+      heroTimer = setInterval(() => slide(1), 6000);
+    }
+  } catch (e) { console.error('Hero load failed', e); }
 }
 
-// ============ ACCORDION / TABS (static pages) ============
-function tog(h) { h.classList.toggle('open'); h.nextElementSibling.classList.toggle('open'); }
-function btab(n, b) {
-  document.querySelectorAll('#pg-branch .tpanel').forEach(p => p.classList.remove('on'));
-  document.querySelectorAll('#pg-branch .tbtn').forEach(x => x.classList.remove('on'));
-  document.getElementById('bt-' + n).classList.add('on'); b.classList.add('on');
-}
-function ntab(n, b) {
-  document.querySelectorAll('#pg-news .tpanel').forEach(p => p.classList.remove('on'));
-  document.querySelectorAll('#pg-news .tbtn').forEach(x => x.classList.remove('on'));
-  document.getElementById('nt-' + n).classList.add('on'); b.classList.add('on');
-}
-function mTab(n, b) {
-  document.querySelectorAll('#pg-members .tpanel').forEach(p => p.classList.remove('on'));
-  document.querySelectorAll('.mtab').forEach(x => x.classList.remove('on'));
-  document.getElementById('ml-' + n).classList.add('on'); b.classList.add('on');
-}
+// ── HELPERS ───────────────────────────────────
+let newsCache = [];
+let membersCache = [];
 
-// ============ HELPERS ============
-function formatDate(d) {
+function esc(s) {
+  if (!s) return '';
+  return s.replace(/[&<>"']/g, c =>
+    ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function truncate(s, n) {
+  if (!s) return '';
+  return s.length > n ? s.slice(0, n).trim() + '…' : s;
+}
+function fmtDate(d) {
   if (!d) return '';
-  const parts = d.split('-');
-  if (parts.length === 3) return `${parts[0]}/${parts[1]}/${parts[2]}`;
-  return d;
+  return d.replace(/-/g, '/');
 }
-function eventBadge(d) {
+function evtBadge(d) {
   const dt = new Date(d + 'T00:00:00');
   if (isNaN(dt)) return { day: '--', my: '--' };
-  const day = String(dt.getDate()).padStart(2, '0');
-  const month = String(dt.getMonth() + 1).padStart(2, '0');
-  const year = String(dt.getFullYear()).slice(-2);
-  return { day, my: `${month}/${year}` };
+  return {
+    day: String(dt.getDate()).padStart(2, '0'),
+    my: String(dt.getMonth()+1).padStart(2,'0') + '/' + String(dt.getFullYear()).slice(-2)
+  };
 }
-function thumb(item, sizeClass) {
-  if (item.image) return `<div class="${sizeClass}"><img src="${item.image}" alt=""></div>`;
-  return `<div class="${sizeClass}">${item.emoji || '📰'}</div>`;
+function thumbHtml(item, cls) {
+  return item.image
+    ? `<div class="${cls}"><img src="${item.image}" alt=""></div>`
+    : `<div class="${cls}">${item.emoji || '📰'}</div>`;
+}
+function typeLbl(t) {
+  return t === 'event' ? 'ҮЙЛ ЯВДАЛ' : t === 'pr' ? 'МЭДЭГДЭЛ' : 'МЭДЭЭ';
 }
 
-// ============ NEWS ============
+// ── NEWS ──────────────────────────────────────
 async function loadNews() {
   try {
     const res = await fetch('/api/news');
-    const items = await res.json();
-    window.__newsCache = items;
-    renderHomeNews(items);
-    renderHomeEvents(items);
-    renderNewsPage(items);
-  } catch (e) {
-    console.error('News load failed', e);
-  }
+    newsCache = await res.json();
+    renderHomeNews();
+    renderHomeEvents();
+    renderNewsPage();
+  } catch (e) { console.error('News load failed', e); }
 }
 
-function renderHomeNews(items) {
-  const general = items.filter(n => n.type === 'news');
+function renderHomeNews() {
+  const gen = newsCache.filter(n => n.type === 'news');
   const grid = document.getElementById('home-news-grid');
-  if (!general.length) { grid.innerHTML = '<div class="empty-state">Одоогоор мэдээ алга байна.</div>'; return; }
-  const featured = general.find(n => n.featured) || general[0];
-  const rest = general.filter(n => n.id !== featured.id).slice(0, 4);
+  if (!gen.length) { grid.innerHTML = '<div class="empty-state">Одоогоор мэдээ алга байна.</div>'; return; }
+  const feat = gen.find(n => n.featured) || gen[0];
+  const rest = gen.filter(n => n.id !== feat.id).slice(0, 4);
   grid.innerHTML = `
-    <div class="nc nbig" onclick="openNews(${featured.id})">
-      ${thumb(featured, 'nth')}
-      <div class="nb"><div class="nm"><span class="ncat">МЭДЭЭ</span><span class="ndate">${formatDate(featured.date)}</span></div><div class="ntitle">${featured.title}</div></div>
+    <div class="nc nbig" onclick="openNews(${feat.id})">
+      ${thumbHtml(feat, 'nth')}
+      <div class="nb">
+        <div class="nm"><span class="ncat">${typeLbl(feat.type)}</span><span class="ndate">${fmtDate(feat.date)}</span></div>
+        <div class="ntitle">${feat.title}</div>
+        ${feat.summary ? `<div class="nsummary">${truncate(feat.summary, 120)}</div>` : ''}
+      </div>
     </div>
     <div class="nsl">
       ${rest.map(n => `
         <div class="ns" onclick="openNews(${n.id})">
-          ${thumb(n, 'nsth')}
-          <div class="nsbody"><div class="nsdate">${formatDate(n.date)}</div><div class="nstitle">${n.title}</div></div>
+          ${thumbHtml(n, 'nsth')}
+          <div class="nsbody">
+            <div class="nsdate">${fmtDate(n.date)}</div>
+            <div class="nstitle">${n.title}</div>
+          </div>
         </div>`).join('')}
     </div>`;
 }
 
-function renderHomeEvents(items) {
-  const events = items.filter(n => n.type === 'event').slice(0, 4);
+function renderHomeEvents() {
+  const evts = newsCache.filter(n => n.type === 'event').slice(0, 4);
   const el = document.getElementById('home-events');
-  if (!events.length) { el.innerHTML = '<div class="empty-state">Одоогоор үйл явдал алга байна.</div>'; return; }
-  el.innerHTML = events.map(ev => {
-    const b = eventBadge(ev.date);
+  if (!evts.length) { el.innerHTML = '<div class="empty-state">Үйл явдал алга байна.</div>'; return; }
+  el.innerHTML = evts.map(ev => {
+    const b = evtBadge(ev.date);
     return `<div class="ev" onclick="openNews(${ev.id})">
       <div class="evd"><div class="d">${b.day}</div><div class="m">${b.my}</div></div>
-      <div class="evb"><h4>${ev.title}</h4><p>Үйл явдал${ev.location ? ' • ' + ev.location : ''}</p></div>
+      <div class="evb">
+        <h4>${ev.title}</h4>
+        <p>${ev.location ? ev.location : 'Үйл явдал'}</p>
+      </div>
     </div>`;
   }).join('');
 }
 
-function renderNewsPage(items) {
-  const all = items;
-  const allGrid = document.querySelector('#nt-all .ng');
-  allGrid.innerHTML = all.length ? all.map(n => `
-    <div class="nc" onclick="openNews(${n.id})">
-      ${thumb(n, 'nth')}
-      <div class="nb"><div class="nm"><span class="ncat" ${n.type === 'pr' ? 'style="background:#8b0000"' : ''}>${n.type === 'pr' ? 'МЭДЭГДЭЛ' : n.type === 'event' ? 'ҮЙЛ ЯВДАЛ' : 'МЭДЭЭ'}</span><span class="ndate">${formatDate(n.date)}</span></div><div class="ntitle">${n.title}</div></div>
-    </div>`).join('') : '<div class="empty-state">Мэдээ алга байна.</div>';
+function renderNewsPage() {
+  // All
+  document.querySelector('#nt-all .ng').innerHTML = newsCache.length
+    ? newsCache.map(n => `
+        <div class="nc" onclick="openNews(${n.id})">
+          ${thumbHtml(n, 'nth')}
+          <div class="nb">
+            <div class="nm"><span class="ncat">${typeLbl(n.type)}</span><span class="ndate">${fmtDate(n.date)}</span></div>
+            <div class="ntitle">${n.title}</div>
+          </div>
+        </div>`).join('')
+    : '<div class="empty-state">Мэдээ алга байна.</div>';
 
-  const events = items.filter(n => n.type === 'event');
-  const evList = document.querySelector('#nt-ev .evl');
-  evList.innerHTML = events.length ? events.map(ev => {
-    const b = eventBadge(ev.date);
-    return `<div class="ev" onclick="openNews(${ev.id})">
-      <div class="evd"><div class="d">${b.day}</div><div class="m">${b.my}</div></div>
-      <div class="evb"><h4>${ev.title}</h4><p>Үйл явдал${ev.location ? ' • ' + ev.location : ''}</p></div>
-    </div>`;
-  }).join('') : '<div class="empty-state">Үйл явдал алга байна.</div>';
+  // Events
+  const evts = newsCache.filter(n => n.type === 'event');
+  document.querySelector('#nt-ev .evl').innerHTML = evts.length
+    ? evts.map(ev => {
+        const b = evtBadge(ev.date);
+        return `<div class="ev" onclick="openNews(${ev.id})">
+          <div class="evd"><div class="d">${b.day}</div><div class="m">${b.my}</div></div>
+          <div class="evb"><h4>${ev.title}</h4><p>${ev.location||'Үйл явдал'}</p></div>
+        </div>`;
+      }).join('')
+    : '<div class="empty-state">Үйл явдал алга байна.</div>';
 
-  const pr = items.filter(n => n.type === 'pr');
-  const prGrid = document.querySelector('#nt-pr .ng');
-  prGrid.innerHTML = pr.length ? pr.map(n => `
-    <div class="nc" onclick="openNews(${n.id})">
-      ${thumb(n, 'nth')}
-      <div class="nb"><div class="nm"><span class="ncat" style="background:#8b0000">МЭДЭГДЭЛ</span><span class="ndate">${formatDate(n.date)}</span></div><div class="ntitle">${n.title}</div></div>
-    </div>`).join('') : '<div class="empty-state">Мэдэгдэл алга байна.</div>';
+  // Press releases
+  const pr = newsCache.filter(n => n.type === 'pr');
+  document.querySelector('#nt-pr .ng').innerHTML = pr.length
+    ? pr.map(n => `
+        <div class="nc" onclick="openNews(${n.id})">
+          ${thumbHtml(n, 'nth')}
+          <div class="nb">
+            <div class="nm"><span class="ncat" style="color:var(--red)">${typeLbl(n.type)}</span><span class="ndate">${fmtDate(n.date)}</span></div>
+            <div class="ntitle">${n.title}</div>
+          </div>
+        </div>`).join('')
+    : '<div class="empty-state">Мэдэгдэл алга байна.</div>';
 }
 
-// ============ MEMBERS ============
-let membersCache = [];
+function openNews(id) {
+  const item = newsCache.find(n => String(n.id) === String(id));
+  if (!item) return go('news');
+  document.getElementById('nd-title').textContent = item.title;
+  document.getElementById('nd-date').textContent = fmtDate(item.date) + (item.location ? ' · ' + item.location : '');
+  const img = item.image ? `<img src="${item.image}" style="width:100%;border-radius:10px;margin-bottom:20px">` : '';
+  const body = item.content
+    ? item.content.replace(/\n/g, '<br>')
+    : (item.summary || 'Дэлгэрэнгүй мэдээлэл удахгүй нэмэгдэнэ.');
+  document.getElementById('nd-body').innerHTML = img + `<p>${body}</p>`;
+  go('newsdetail');
+}
+
+// ── MEMBERS ───────────────────────────────────
 async function loadMembers() {
   try {
     const res = await fetch('/api/members');
-    const items = await res.json();
-    membersCache = items;
-    ['lead', 'nbd', 'uih', 'nitx'].forEach(g => {
-      const list = items.filter(m => m.group_key === g);
-      const el = document.querySelector(`#ml-${g} .mslider`);
-      el.innerHTML = list.length ? list.map(m => `
-        <div class="mcard" onclick="openMember(${m.id})">
-          ${m.photo ? `<div class="mph"><img src="${m.photo}" alt=""></div>` : `<div class="mph">👤</div>`}
-          <div class="mname">${m.name}</div>
-          <div class="mrole">${m.role || ''}</div>
-          ${m.description ? `<div class="mlink">Дэлгэрэнгүй →</div>` : ''}
-        </div>`).join('') : '<div class="empty-state">Гишүүн алга байна.</div>';
-    });
-  } catch (e) {
-    console.error('Members load failed', e);
-  }
+    membersCache = await res.json();
+    ['lead','nbd','uih','nitx'].forEach(g => renderMemberGroup(g));
+  } catch(e) { console.error('Members load failed', e); }
+}
+
+function renderMemberGroup(g) {
+  const list = membersCache.filter(m => m.group_key === g);
+  const el = document.getElementById('mg-' + g);
+  if (!list.length) { el.innerHTML = '<div class="empty-state">Гишүүн алга байна.</div>'; return; }
+  el.innerHTML = list.map(m => `
+    <div class="mcard" onclick="openMember(${m.id})">
+      <div class="mph">
+        ${m.photo ? `<img src="${m.photo}" alt="">` : '👤'}
+      </div>
+      <div class="minfo">
+        <div class="mname">${m.name}</div>
+        <div class="mrole">${m.role || ''}</div>
+        ${m.description ? `<div class="mdesc">${truncate(m.description, 100)}</div>` : ''}
+      </div>
+    </div>`).join('');
 }
 
 function openMember(id) {
@@ -217,17 +267,64 @@ function openMember(id) {
   if (!m) return go('members');
   document.getElementById('md-name').textContent = m.name;
   document.getElementById('md-name2').textContent = m.name;
-  document.getElementById('md-role').textContent = m.role || '';
+  document.getElementById('md-role-top').textContent = m.role || '';
   document.getElementById('md-role2').textContent = m.role || '';
-  document.getElementById('md-photo').innerHTML = m.photo ? `<img src="${m.photo}" alt="">` : '👤';
+  document.getElementById('md-photo').innerHTML = m.photo
+    ? `<img src="${m.photo}" alt="">`
+    : '👤';
   document.getElementById('md-description').innerHTML = m.description
     ? m.description.replace(/\n/g, '<br>')
     : '<span style="color:var(--gray)">Намтар мэдээлэл удахгүй нэмэгдэнэ.</span>';
   go('memberdetail');
 }
 
-// ============ INIT ============
-window.__newsCache = [];
+function goTab(group) {
+  go('members');
+  setTimeout(() => {
+    document.querySelectorAll('#pg-members .tpanel').forEach(p => p.classList.remove('on'));
+    document.querySelectorAll('.mtab').forEach(x => x.classList.remove('on'));
+    const panel = document.getElementById('ml-' + group);
+    if (panel) panel.classList.add('on');
+    const btn = document.querySelector(`.mtab[onclick*="'${group}'"]`);
+    if (btn) btn.classList.add('on');
+  }, 10);
+}
+
+// function goTab(group) {
+//   go('branch');
+//   setTimeout(() => {
+//     document.querySelectorAll('#pg-branch .tpanel').forEach(p => p.classList.remove('on'));
+//     document.querySelectorAll('.mtab').forEach(x => x.classList.remove('on'));
+//     const panel = document.getElementById('ml-' + group);
+//     if (panel) panel.classList.add('on');
+//     const btn = document.querySelector(`.btab[onclick*="'${group}'"]`);
+//     if (btn) btn.classList.add('on');
+//   }, 10);
+// }
+
+
+// ── STATIC PAGE HELPERS ───────────────────────
+function tog(h) {
+  h.classList.toggle('open');
+  h.nextElementSibling.classList.toggle('open');
+}
+function ntab(n, b) {
+  document.querySelectorAll('#pg-news .tpanel').forEach(p => p.classList.remove('on'));
+  document.querySelectorAll('#pg-news .tbtn').forEach(x => x.classList.remove('on'));
+  document.getElementById('nt-' + n).classList.add('on'); b.classList.add('on');
+}
+function btab(n, b) {
+  document.querySelectorAll('#pg-branch .tpanel').forEach(p => p.classList.remove('on'));
+  document.querySelectorAll('#pg-branch .tbtn').forEach(x => x.classList.remove('on'));
+  document.getElementById('bt-' + n).classList.add('on'); b.classList.add('on');
+}
+function mTab(n, b) {
+  document.querySelectorAll('#pg-members .tpanel').forEach(p => p.classList.remove('on'));
+  document.querySelectorAll('.mtab').forEach(x => x.classList.remove('on'));
+  document.getElementById('ml-' + n).classList.add('on'); b.classList.add('on');
+}
+
+// ── INIT ──────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   loadHero();
   loadNews();
