@@ -213,6 +213,8 @@ function editNews(id) {
   document.getElementById('news-title').value = n.title || '';
   document.getElementById('news-summary').value = n.summary || '';
   document.getElementById('news-content').value = n.content || '';
+  document.getElementById('news-youtube-url').value = n.youtube_url || '';
+  document.getElementById('news-facebook-video-url').value = n.facebook_video_url || '';
   document.getElementById('news-emoji').value = n.emoji || '📰';
   document.getElementById('news-location').value = n.location || '';
   document.getElementById('news-featured').checked = !!n.featured;
@@ -229,6 +231,8 @@ document.getElementById('news-form').addEventListener('submit', async (e) => {
   fd.append('title', document.getElementById('news-title').value);
   fd.append('summary', document.getElementById('news-summary').value);
   fd.append('content', document.getElementById('news-content').value);
+  fd.append('youtube_url', document.getElementById('news-youtube-url').value);
+  fd.append('facebook_video_url', document.getElementById('news-facebook-video-url').value);
   fd.append('emoji', document.getElementById('news-emoji').value);
   fd.append('location', document.getElementById('news-location').value);
   fd.append('featured', document.getElementById('news-featured').checked ? '1' : '');
