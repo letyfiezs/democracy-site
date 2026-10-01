@@ -37,9 +37,7 @@ CREATE TABLE IF NOT EXISTS news (
   date TEXT NOT NULL,
   location TEXT,
   featured INTEGER DEFAULT 0,
-  sort_order INTEGER DEFAULT 0,
-  youtube_url TEXT DEFAULT '',
-  facebook_video_url TEXT DEFAULT ''
+  sort_order INTEGER DEFAULT 0
 );
 
 CREATE TABLE IF NOT EXISTS members (
@@ -70,10 +68,6 @@ const memberCols = db.prepare("PRAGMA table_info(members)").all().map(c => c.nam
 if (!memberCols.includes('description')) {
   db.exec('ALTER TABLE members ADD COLUMN description TEXT');
 }
-
-const newsCols = db.prepare("PRAGMA table_info(news)").all().map(c => c.name);
-if (!newsCols.includes('youtube_url')) db.exec("ALTER TABLE news ADD COLUMN youtube_url TEXT DEFAULT ''");
-if (!newsCols.includes('facebook_video_url')) db.exec("ALTER TABLE news ADD COLUMN facebook_video_url TEXT DEFAULT ''");
 
 // Seed default admin user if none exists
 const adminCount = db.prepare('SELECT COUNT(*) AS c FROM admin_users').get().c;

@@ -232,30 +232,7 @@ function openNews(id) {
   const body = item.content
     ? item.content.replace(/\n/g, '<br>')
     : (item.summary || 'Дэлгэрэнгүй мэдээлэл удахгүй нэмэгдэнэ.');
-  let videos = '';
-  if (item.youtube_url) {
-    try {
-      const url = new URL(item.youtube_url);
-      const host = url.hostname.toLowerCase().replace(/^www\./, '');
-      const id = host === 'youtu.be' ? url.pathname.slice(1).split('/')[0] :
-        ['youtube.com', 'm.youtube.com'].includes(host) ?
-          (url.pathname === '/watch' ? url.searchParams.get('v') : url.pathname.match(/^\/(?:shorts|embed|live)\/([^/]+)/)?.[1]) : '';
-      if (url.protocol === 'https:' && /^[a-zA-Z0-9_-]{11}$/.test(id || '')) {
-        videos += `<div class="news-video"><iframe src="https://www.youtube-nocookie.com/embed/${id}" title="YouTube видео" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>`;
-      }
-    } catch {}
-  }
-  if (item.facebook_video_url) {
-    try {
-      const url = new URL(item.facebook_video_url);
-      const host = url.hostname.toLowerCase();
-      if (url.protocol === 'https:' && ['facebook.com', 'www.facebook.com', 'm.facebook.com', 'web.facebook.com', 'fb.watch', 'www.fb.watch'].includes(host)) {
-        const src = `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(url.toString())}&show_text=false`;
-        videos += `<div class="news-video"><iframe src="${src}" title="Facebook видео" loading="lazy" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowfullscreen></iframe></div>`;
-      }
-    } catch {}
-  }
-  document.getElementById('nd-body').innerHTML = img + `<p>${body}</p>` + videos;
+  document.getElementById('nd-body').innerHTML = img + `<p>${body}</p>`;
   go('newsdetail');
 }
 
